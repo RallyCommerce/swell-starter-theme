@@ -1,0 +1,71 @@
+<template>
+  <div class="container">
+    <!-- Breadcrumb -->
+    <NuxtLink
+      v-if="previousOrderRoute"
+      :to="localePath(previousOrderRoute ? previousOrderRoute : '/account/orders/')"
+      class="flex items-center cursor-pointer mb-6"
+    >
+      <BaseIcon icon="uil:angle-left" size="sm" />
+      <span class="ml-1">{{
+        $tc('account.orders.returns.backToOrders', previousOrderRoute ? 1 : 2)
+      }}</span>
+    </NuxtLink>
+
+    <div class="mb-16">
+      <h1 class="text-2xl">{{ $t('account.orders.returns.title') }}</h1>
+      <p v-balance-text.children class="text-sm" v-html="$t('account.orders.returns.infoText')"></p>
+    </div>
+
+    <BaseButton
+      v-if="previousOrderRoute"
+      class="w-full block mb-6"
+      fit="auto"
+      appearance="light"
+      :label="$tc('account.orders.returns.backToOrders', 2)"
+      :link="localePath('/account/orders/')"
+    />
+
+    <BaseButton
+      v-if="!previousOrderRoute"
+      class="w-full block"
+      fit="auto"
+      appearance="dark"
+      icon="shopping-bag"
+      :label="$t('account.orders.backToProducts')"
+      :link="localePath('/products/')"
+    />
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      previousOrderRoute: ''
+    }
+  },
+
+  watch: {
+    // If routing from order, set breadcrumb.
+    $route(_to, from) {
+      if (from.params.id) this.previousOrderRoute = from.path
+    }
+  },
+
+  mounted() {
+    const {
+      $nuxt: {
+        context: { from }
+      }
+    } = this
+
+    // If routing from order, set breadcrumb.
+    if (from) {
+      this.previousOrderRoute = from.path
+    }
+  },
+
+  layout: 'account'
+}
+</script>
