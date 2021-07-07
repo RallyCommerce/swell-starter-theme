@@ -126,7 +126,7 @@
                 <span>{{ $t('cart.accountBalance') }}</span>
                 <span>{{ formatMoney(account.balance, currency) }}</span>
               </div>
-              <RallyButton v-if="isRallyCheckoutButtonLoaded"/>
+              <RallyButton v-if="isRallyScriptLoaded"/>
             </div>
           </div>
         </div>
@@ -145,7 +145,7 @@ export default {
   data() {
     return {
       couponCode: null,
-      isRallyCheckoutButtonLoaded: false
+      isRallyScriptLoaded: false
     }
   },
   head() {
@@ -155,13 +155,13 @@ export default {
          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
          async: true,
          type: 'module',
-         callback: () => { this.isRallyCheckoutButtonLoaded = true } 
+         callback: () => { this.isRallyScriptLoaded = true } 
         },
        {
          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
          async: true,
          noModule: true,
-         callback: () => { this.isRallyCheckoutButtonLoaded = true } 
+         callback: () => { this.isRallyScriptLoaded = true } 
         }
       ]
     }
