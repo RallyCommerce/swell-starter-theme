@@ -126,8 +126,7 @@
                 <span>{{ $t('cart.accountBalance') }}</span>
                 <span>{{ formatMoney(account.balance, currency) }}</span>
               </div>
-
-              <RallyButton />
+              <RallyButton v-if="isRallyCheckoutButtonLoaded"/>
             </div>
           </div>
         </div>
@@ -145,10 +144,28 @@ export default {
 
   data() {
     return {
-      couponCode: null
+      couponCode: null,
+      isRallyCheckoutButtonLoaded: false
     }
   },
-
+  head() {
+    return {
+      script: [
+       {
+         src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
+         async: true,
+         type: 'module',
+         callback: () => { this.isRallyCheckoutButtonLoaded = true } 
+        },
+       {
+         src: 'https://js.onrally.com/checkout-button/elements-es5.js',
+         async: true,
+         noModule: true,
+         callback: () => { this.isRallyCheckoutButtonLoaded = true } 
+        }
+      ]
+    }
+  },
   computed: {
     ...mapState(['cart', 'cartIsUpdating', 'currency']),
 
