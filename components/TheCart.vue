@@ -127,14 +127,7 @@
                 <span>{{ formatMoney(account.balance, currency) }}</span>
               </div>
 
-              <BaseButton
-                class="block mt-4 mb-1"
-                size="lg"
-                :label="$t('cart.checkout')"
-                :is-loading="cartIsUpdating"
-                :loading-label="$t('cart.updating')"
-                :link="cart.checkoutUrl"
-              />
+              <RallyButton />
             </div>
           </div>
         </div>
