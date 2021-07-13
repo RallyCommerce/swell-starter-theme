@@ -126,6 +126,17 @@
                 <span>{{ $t('cart.accountBalance') }}</span>
                 <span>{{ formatMoney(account.balance, currency) }}</span>
               </div>
+
+              <BaseButton
+                id="checkout-button"
+                class="block mt-4 mb-1 hidden"
+                size="lg"
+                :label="$t('cart.checkout')"
+                :is-loading="cartIsUpdating"
+                :loading-label="$t('cart.updating')"
+                :link="cart.checkoutUrl"
+              />
+
               <RallyButton v-if="isRallyScriptLoaded"/>
             </div>
           </div>
@@ -155,13 +166,13 @@ export default {
          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
          async: true,
          type: 'module',
-         callback: () => { this.isRallyScriptLoaded = true } 
+         callback: () => { this.isRallyScriptLoaded = true }
         },
        {
          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
          async: true,
          noModule: true,
-         callback: () => { this.isRallyScriptLoaded = true } 
+         callback: () => { this.isRallyScriptLoaded = true }
         }
       ]
     }
