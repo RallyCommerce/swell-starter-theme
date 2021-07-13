@@ -18,7 +18,7 @@
                 <span v-if="cart && cart.itemQuantity">({{ cart.itemQuantity }})</span>
               </h3>
               <button @click.prevent="$emit('click-close')">
-                <BaseIcon icon="uil:multiply" size="lg" />
+                <BaseIcon icon="uil:multiply" size="lg"/>
               </button>
             </div>
 
@@ -77,7 +77,7 @@
                     class="w-7 h-7 relative rounded-full bg-primary-light ml-3"
                     @click="removeDiscount()"
                   >
-                    <BaseIcon class="absolute center-xy" icon="uil:multiply" size="sm" />
+                    <BaseIcon class="absolute center-xy" icon="uil:multiply" size="sm"/>
                   </button>
                 </div>
                 <div v-for="giftcard in cart.giftcards" :key="giftcard.id" class="mt-4">
@@ -87,11 +87,11 @@
                       class="w-7 h-7 relative rounded-full bg-primary-light ml-3"
                       @click="removeDiscount(giftcard.id, currency)"
                     >
-                      <BaseIcon class="absolute center-xy" icon="uil:multiply" size="sm" />
+                      <BaseIcon class="absolute center-xy" icon="uil:multiply" size="sm"/>
                     </button>
                   </p>
                   <p class="text-sm">
-                    {{ $t('cart.giftCard', { amount: formatMoney(giftcard.amount, currency) }) }}
+                    {{ $t('cart.giftCard', {amount: formatMoney(giftcard.amount, currency)}) }}
                   </p>
                 </div>
               </div>
@@ -128,7 +128,6 @@
               </div>
 
               <BaseButton
-                id="checkout-button"
                 class="block mt-4 mb-1 hidden"
                 size="lg"
                 :label="$t('cart.checkout')"
@@ -137,7 +136,9 @@
                 :link="cart.checkoutUrl"
               />
 
-              <RallyButton v-if="isRallyScriptLoaded"/>
+              <RallyButton
+                v-if="isRallyScriptLoaded"
+                :link="cart.checkoutUrl"/>
             </div>
           </div>
         </div>
@@ -148,7 +149,7 @@
 
 <script>
 // Helpers
-import { mapState } from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   name: 'TheCart',
@@ -162,17 +163,21 @@ export default {
   head() {
     return {
       script: [
-       {
-         src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
-         async: true,
-         type: 'module',
-         callback: () => { this.isRallyScriptLoaded = true }
+        {
+          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
+          async: true,
+          type: 'module',
+          callback: () => {
+            this.isRallyScriptLoaded = true
+          }
         },
-       {
-         src: 'https://js.onrally.com/checkout-button/elements-es5.js',
-         async: true,
-         noModule: true,
-         callback: () => { this.isRallyScriptLoaded = true }
+        {
+          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
+          async: true,
+          noModule: true,
+          callback: () => {
+            this.isRallyScriptLoaded = true
+          }
         }
       ]
     }
@@ -188,8 +193,8 @@ export default {
 
   mounted() {
     // Pass a checkout ID as a query string param to recover a specific cart
-    const { checkout: checkoutId } = this.$route.query
-    this.$store.dispatch('initializeCart', { checkoutId })
+    const {checkout: checkoutId} = this.$route.query
+    this.$store.dispatch('initializeCart', {checkoutId})
   },
 
   methods: {
