@@ -127,18 +127,16 @@
                 <span>{{ formatMoney(account.balance, currency) }}</span>
               </div>
 
-              <BaseButton
-                class="block mt-4 mb-1 hidden"
+              <BaseButton v-show="!isRallyPrepared"
+                class="block mt-4 mb-1"
                 size="lg"
+                :hidden="isRallyScriptLoaded"
                 :label="$t('cart.checkout')"
                 :is-loading="cartIsUpdating"
                 :loading-label="$t('cart.updating')"
                 :link="cart.checkoutUrl"
               />
-
-              <RallyButton
-                v-if="isRallyScriptLoaded"
-                :link="cart.checkoutUrl"/>
+              <RallyButton class="block mt-4 mb-1" :link="cart.checkoutUrl" :cart-id="cart.id" v-if="isRallyPrepared"/>
             </div>
           </div>
         </div>
@@ -149,35 +147,27 @@
 
 <script>
 // Helpers
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   name: 'TheCart',
-
   data() {
     return {
-      couponCode: null,
-      isRallyScriptLoaded: false
+      couponCode: null
     }
   },
   head() {
     return {
       script: [
         {
-          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
+          src: 'https://stage.js.onrally.dev/checkout-button/elements-es2015.js',
           async: true,
-          type: 'module',
-          callback: () => {
-            this.isRallyScriptLoaded = true
-          }
+          type: 'module'
         },
         {
-          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
+          src: 'https://stage.js.onrally.dev/checkout-button/elements-es5.js',
           async: true,
           noModule: true,
-          callback: () => {
-            this.isRallyScriptLoaded = true
-          }
         }
       ]
     }
@@ -188,16 +178,20 @@ export default {
     account() {
       if (!this.cart.account) return
       return this.cart.account
+    },
+    isRallyPrepared() {
+      return !!window.Rally && this.cart.id;
     }
   },
 
   mounted() {
     // Pass a checkout ID as a query string param to recover a specific cart
-    const {checkout: checkoutId} = this.$route.query
-    this.$store.dispatch('initializeCart', {checkoutId})
+    const { checkout: checkoutId } = this.$route.query;
+    this.$store.dispatch('initializeCart', { checkoutId });
   },
 
   methods: {
+
     async applyDiscount() {
       // Try to apply a coupon or gift card code
       await this.$store.dispatch('applyDiscount', this.couponCode)
@@ -209,5 +203,5 @@ export default {
       this.$store.dispatch('removeDiscount', id)
     }
   }
-}
+} 
 </script>
