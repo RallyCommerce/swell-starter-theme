@@ -57,17 +57,17 @@ export default {
 head() {
   return {
     script: [
-      {
-        src: '',
-        async: true,
-        type: 'module'
-      },
-      {
-        src: '',
-        async: true,
-        noModule: true,
-      }
-    ]
+        {
+          src: 'https://stage.js.onrally.dev/checkout-button/elements-es2015.js',
+          async: true,
+          type: 'module'
+        },
+        {
+          src: 'https://stage.js.onrally.dev/checkout-button/elements-es5.js',
+          async: true,
+          noModule: true,
+        }
+     ]
   }
 },
 computed: {   
