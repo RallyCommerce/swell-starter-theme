@@ -1,3 +1,86 @@
+# Integrating the Rally Checkout Button instructions
+
+
+Rally Developer Portal reference on integrating the Rally Checkout Button can be found [here](https://developers.rallyon.com/docs/jssdk/integrating-the-checkout-button/)
+
+Instructions
+------------
+
+### Add [RallyButton.vue](https://github.com/RallyCommerce/swell-connector-starter-theme/blob/main/components/RallyButton.vue) component to your starter theme
+
+```
+<template>
+  <rally-checkout-button v-pre></rally-checkout-button>
+</template>
+
+<script>
+export default {
+  name: 'RallyButton',
+  props: {
+    link: {
+      type: [Object, String],
+      default: ''
+    },
+    cartId: {
+      type: String,
+      default: ''
+    }
+  },
+  mounted() {
+      var configuration = {
+            redirect: true,
+            fallbackUrl: this.link,
+            cartId: this.cartId
+      };
+      window.Rally.init('9476d5b3-5fe9-4e19-92e2-514f5c84d9e3', configuration);
+  },
+  methods: {
+  }
+}
+</script>
+```
+
+### Add the following code changes to [TheCart.vue](https://github.com/RallyCommerce/swell-connector-starter-theme/blob/main/components/TheCart.vue) component
+
+```
+<BaseButton v-show="!isRallyPrepared"
+            class="block mt-4 mb-1"
+            size="lg"
+            :label="$t('cart.checkout')"
+            :is-loading="cartIsUpdating"
+            :loading-label="$t('cart.updating')"
+            :link="cart.checkoutUrl"/>
+<RallyButton class="block mt-4 mb-1" :link="cart.checkoutUrl" :cart-id="cart.id" v-if="isRallyPrepared"/>
+```
+
+```
+head() {
+  return {
+    script: [
+      {
+        src: '',
+        async: true,
+        type: 'module'
+      },
+      {
+        src: '',
+        async: true,
+        noModule: true,
+      }
+    ]
+  }
+},
+computed: {   
+  isRallyPrepared() {
+    return !!window.Rally && this.cart.id;
+  }
+},
+```
+
+----
+Original Swell instructions below
+----
+
 # Origin - headless storefront theme for [Swell](https://www.swell.is/)
 
 Origin is a universal progressive web app for online stores, using modern JavaScript and front-end tooling. It's intended as a reference example and starter project for building custom storefronts powered by Swell.
