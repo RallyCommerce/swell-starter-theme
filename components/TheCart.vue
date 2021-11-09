@@ -160,12 +160,12 @@ export default {
     return {
       script: [
         {
-          src: 'https://stage.js.onrally.dev/checkout-button/elements-es2015.js',
+          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
           async: true,
           type: 'module'
         },
         {
-          src: 'https://stage.js.onrally.dev/checkout-button/elements-es5.js',
+          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
           async: true,
           noModule: true,
         }
