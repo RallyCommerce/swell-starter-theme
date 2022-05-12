@@ -6,75 +6,41 @@ Rally Developer Portal reference on integrating the Rally Checkout Button can be
 Instructions
 ------------
 
-### Add [RallyButton.vue](https://github.com/RallyCommerce/swell-connector-starter-theme/blob/main/components/RallyButton.vue) component to your starter theme
+### Add [rally.js](https://github.com/RallyCommerce/swell-connector-starter-theme/blob/main/plugins/rally.js) plugin to your starter theme
 
 ```
-<template>
-  <rally-checkout-button v-pre></rally-checkout-button>
-</template>
+import { Rally } from '@rallycommerce/swell';
 
-<script>
-export default {
-  name: 'RallyButton',
-  props: {
-    link: {
-      type: [Object, String],
-      default: ''
-    },
-    cartId: {
-      type: String,
-      default: ''
-    }
-  },
-  mounted() {
-      var configuration = {
-            redirect: true,
-            fallbackUrl: this.link,
-            cartId: this.cartId
+export default async function ({ store }) {
+  store.subscribe(({ payload }) => {
+    if (payload?.key === 'cart') {
+      const configuration = {
+        redirect: true,
+        cart: payload.value
       };
-      window.Rally.init('clientId', configuration);
-  },
-  methods: {
-  }
+      Rally.init('clientId', configuration);
+    }
+  });
 }
-</script>
 ```
 
-### Add the following code changes to [TheCart.vue](https://github.com/RallyCommerce/swell-connector-starter-theme/blob/main/components/TheCart.vue) component
+### Replace the BaseButton component in the [TheCart.vue](https://github.com/RallyCommerce/swell-connector-starter-theme/blob/main/components/TheCart.vue) component
 
 ```
-<BaseButton v-show="!isRallyPrepared"
-            class="block mt-4 mb-1"
-            size="lg"
-            :label="$t('cart.checkout')"
-            :is-loading="cartIsUpdating"
-            :loading-label="$t('cart.updating')"
-            :link="cart.checkoutUrl"/>
-<RallyButton class="block mt-4 mb-1" :link="cart.checkoutUrl" :cart-id="cart.id" v-if="isRallyPrepared"/>
+<BaseButton
+                class="block mt-4 mb-1"
+                size="lg"
+                :label="$t('cart.checkout')"
+                :is-loading="cartIsUpdating"
+                :loading-label="$t('cart.updating')"
+                :link="cart.checkoutUrl"
+              />
 ```
+With:
 
 ```
-head() {
-  return {
-    script: [
-        {
-          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
-          async: true,
-          type: 'module'
-        },
-        {
-          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
-          async: true,
-          noModule: true,
-        }
-     ]
-  }
-},
-computed: {   
-  isRallyPrepared() {
-    return !!window.Rally && this.cart.id;
-  }
-},
+<rally-checkout-button :custom-text="$t(cartIsUpdating ? 'cart.updating' : 'cart.checkout')" custom-class="btn btn--lg w-full" loader="true">
+                </rally-checkout-button>
 ```
 
 ----
