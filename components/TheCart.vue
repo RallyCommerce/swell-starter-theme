@@ -127,16 +127,8 @@
                 <span>{{ formatMoney(account.balance, currency) }}</span>
               </div>
 
-              <BaseButton v-show="!isRallyPrepared"
-                class="block mt-4 mb-1"
-                size="lg"
-                :hidden="isRallyScriptLoaded"
-                :label="$t('cart.checkout')"
-                :is-loading="cartIsUpdating"
-                :loading-label="$t('cart.updating')"
-                :link="cart.checkoutUrl"
-              />
-              <RallyButton class="block mt-4 mb-1" :link="cart.checkoutUrl" :cart-id="cart.id" v-if="isRallyPrepared"/>
+              <rally-checkout-button :custom-text="$t(cartIsUpdating ? 'cart.updating' : 'cart.checkout')" custom-class="btn btn--lg w-full" loader="true">
+                </rally-checkout-button>
             </div>
           </div>
         </div>
@@ -156,31 +148,12 @@ export default {
       couponCode: null
     }
   },
-  head() {
-    return {
-      script: [
-        {
-          src: 'https://js.onrally.com/checkout-button/elements-es2015.js',
-          async: true,
-          type: 'module'
-        },
-        {
-          src: 'https://js.onrally.com/checkout-button/elements-es5.js',
-          async: true,
-          noModule: true,
-        }
-      ]
-    }
-  },
   computed: {
     ...mapState(['cart', 'cartIsUpdating', 'currency']),
 
     account() {
       if (!this.cart.account) return
       return this.cart.account
-    },
-    isRallyPrepared() {
-      return !!window.Rally && this.cart.id;
     }
   },
 
